@@ -107,15 +107,30 @@ class Manager
                 continue;
             }
             validCount = validCount + 1;
-            unitNames.Append<string>(report[0]);
-            reportTypes.Append<ReportType>(reportType);
-            priorities.Append<int>(priority);
-            scores.Append<double>(score);
-            statuses.Append<Status>(status);
+            unitNames[i] = report[0];
+            reportTypes[i] = reportType;
+            priorities[i] = priority;
+            scores[i] = score;
+            statuses[i] = status;
         }
-        Console.WriteLine("Processing complete.");
-        Console.WriteLine($"Valid records:{validCount}\nInvalid records:{reports.Length - validCount}");
-        return 1;
+        Console.WriteLine($"Processing complete.\n" +
+            $"Valid records:{validCount}\nInvalid records:{reports.Length - validCount}\n" +
+            $"Stored {validCount} valid records for analysis");
+        return validCount;
+    }
+
+    static double CalculateAverage(double[] scores, int validCount)
+    {
+        if (validCount == 0)
+        {
+            return 0.0;
+        }
+        double sum = 0.0;
+        for(int i = 0; i < validCount; i ++)
+        {
+            sum = sum + scores[i];
+        }
+        return sum;
     }
 
     static void Main()
@@ -134,7 +149,9 @@ class Manager
         double[] scores = new double[reportsNumber];
         Status[] statuses = new Status[reportsNumber];
 
-        ProcessReports(unitNames, reportTypes, priorities, scores, statuses, reports);
+        int validCount = ProcessReports(unitNames, reportTypes, priorities, scores, statuses, reports);
+        double avarage = CalculateAverage(scores, validCount);
+        Console.WriteLine($"{avarage}");
     }
       
 }
