@@ -2,6 +2,21 @@
 using System.IO;
 namespace ReportFilesAnalyzer;
 
+enum ReportType
+{
+    Intel,
+    Recon,
+    Analyze,
+    Collect
+}
+
+enum Status
+{
+    Pending,
+    Approved,
+    Rejected
+}
+
 class Manager
 {
     static string[]? LoadFile(string? aPath)
@@ -27,10 +42,36 @@ class Manager
         }
     }
 
+    static int ProcessReports(string[] unitNames, ReportType[] reportTypes, int[] priorities, double[] scores, Status[] statuses, string[] reports)
+    {
+        for (int i = 0; i < reports.Length; i ++)
+        {
+            string[] report = reports[i].Split(',');
+            //foreach (string val in report)
+            //{
+            //    Console.WriteLine(val);
+            //}
+        }
+        return 1;
+    }
+
     static void Main()
     {
         string path = @".\reports.txt";
-        string[]? reports = LoadFile(path);
+        string[]? nullableReports = LoadFile(path);
+        if (nullableReports is null)
+        {
+            return;
+        }
+        string[] reports = nullableReports;
+        int reportsNumber = reports.Length;
+        string[] unitNames = new string[reportsNumber];
+        ReportType[] reportTypes = new ReportType[reportsNumber];
+        int[] priorities = new int[reportsNumber];
+        double[] scores = new double[reportsNumber];
+        Status[] statuses = new Status[reportsNumber];
+
+        ProcessReports(unitNames, reportTypes, priorities, scores, statuses, reports);
     }
       
 }
