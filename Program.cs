@@ -133,6 +133,19 @@ class Manager
         return sum;
     }
 
+    static double FindByScore(double[] scores)
+    {
+        double max = 0.0;
+        for (int i = 0; i < scores.Length; i++)
+        {
+            if (scores[i] > max)
+            {
+                max = scores[i];
+            }
+        }
+        return max;
+    }
+
     static void Main()
     {
         string path = @".\reports.txt";
