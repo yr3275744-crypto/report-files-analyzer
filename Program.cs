@@ -106,12 +106,13 @@ class Manager
             {
                 continue;
             }
+            
+            unitNames[validCount] = report[0];
+            reportTypes[validCount] = reportType;
+            priorities[validCount] = priority;
+            scores[validCount] = score;
+            statuses[validCount] = status;
             validCount = validCount + 1;
-            unitNames[i] = report[0];
-            reportTypes[i] = reportType;
-            priorities[i] = priority;
-            scores[i] = score;
-            statuses[i] = status;
         }
         Console.WriteLine($"Processing complete.\n" +
             $"Valid records:{validCount}\nInvalid records:{reports.Length - validCount}\n" +
@@ -130,10 +131,10 @@ class Manager
         {
             sum = sum + scores[i];
         }
-        return sum;
+        return sum / scores.Length;
     }
 
-    static double FindByScore(double[] scores)
+    static double FindMaxScore(double[] scores)
     {
         double max = 0.0;
         for (int i = 0; i < scores.Length; i++)
@@ -144,6 +145,25 @@ class Manager
             }
         }
         return max;
+    }
+
+    static double FindMinScore(double[] scores, int validCount)
+    {
+        {
+            if (validCount == 0)
+            {
+                return 0.0;
+            }
+            double min = scores[0];
+            for (int i = 0; i < validCount; i++)
+            {
+                if (scores[i] < min)
+                {
+                    min = scores[i];
+                }
+            }
+            return min;
+        }
     }
 
     static void Main()
@@ -163,8 +183,15 @@ class Manager
         Status[] statuses = new Status[reportsNumber];
 
         int validCount = ProcessReports(unitNames, reportTypes, priorities, scores, statuses, reports);
+        
         double avarage = CalculateAverage(scores, validCount);
         Console.WriteLine($"{avarage}");
+        
+        double maxScore = FindMaxScore(scores);
+        Console.WriteLine($"{maxScore}");
+
+        double minScore = FindMinScore(scores, validCount);
+        Console.WriteLine($"{minScore}");
     }
       
 }
