@@ -44,25 +44,6 @@ class Manager
         }
     }
 
-    //static int? TryParsToInt(string strtingNumber)
-    //{
-    //   if (int.TryParse(strtingNumber.Trim(), out int number))
-    //    {
-    //        int? nullableNumber = number;
-    //        return nullableNumber;
-    //    }
-    //   else
-    //    {
-    //        return null;
-    //    }
-    //}
-
-    //static ReportType? TryParsToReportType(string stringReportType)
-    //{
-    //    if (Enum.TryParse<ReportType>()) ;
-    //}
-
-
     static int ProcessReports(string[] unitNames, ReportType[] reportTypes, int[] priorities, double[] scores, Status[] statuses, string[] reports)
     {
         int validCount = 0;
@@ -279,6 +260,43 @@ class Manager
             $"Score:{scores[index]}");
     }
 
+    static bool GetAverageByPriority(int[] priorities, double[] scores, int validCount, int priority, out double average)
+    {
+        double sum = 0;
+        int counter = 0;
+        average = 0;
+        bool isFind = false;
+        for (int i = 0; i < validCount;i ++)
+        {
+            if (priorities[i] == priority)
+            {
+                isFind = true;
+                sum = sum + scores[i];
+                counter = counter + 1;
+            }
+        }
+        average = sum / counter;
+        return isFind;
+    }
+
+    static void DisplayAverageByPriority(int[] priorities, double[] scores, int validCount)
+    {
+        Console.WriteLine("=== Average Score by Priority ===");
+        for (int i = 1; i <= 5; i ++)
+        {
+            double average;
+            bool isFind = GetAverageByPriority(priorities, scores, validCount, i, out average);
+            if (isFind = true)
+            {
+                Console.WriteLine($"Priority {i}:{average:F2}");
+            }
+            else
+            {
+                Console.WriteLine($"Priority {i}: No reports");
+            }
+        }
+    }
+
     static void Main()
     {
         string path = @".\reports.txt";
@@ -301,6 +319,6 @@ class Manager
         DisplayStatusCounts(statuses, validCount);
         DisplayTypeCounts(reportTypes, validCount);
         DisplayHighestPriorityApproved(unitNames, reportTypes, priorities, scores, statuses, validCount);
-    }
-      
+        DisplayAverageByPriority(priorities, scores, validCount);
+    }      
 }
