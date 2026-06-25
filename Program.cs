@@ -240,6 +240,45 @@ class Manager
             $"Intel:{intelNumber}");
     }
 
+    static bool FindHighesPriorityApprovedIndex(Status[] statuses, int[] priorities, int validCount, out int index)
+    {
+        int? maxPriority = null;
+        bool isFind = false;
+        index = -1;
+
+        for (int i = 0; i < validCount; i ++)
+        {
+            if (statuses[i] == Status.Approved && maxPriority is null) 
+            {
+                isFind = true;
+                index = i;
+                maxPriority = priorities[i];
+            }
+            else if (statuses[i] == Status.Approved && priorities[i] > maxPriority)
+            {
+                index = i;
+                maxPriority = priorities[i];
+            }
+        }
+        return isFind;
+    }
+
+    static void DisplayHighestPriorityApproved(string[] unitNames, ReportType[] reportTypes, int[] priorities, double[] scores, Status[] statuses, int validCount)
+    {
+        Console.WriteLine("=== Highest Priority Approved Report ===");
+        int index;
+        bool isFind = FindHighesPriorityApprovedIndex(statuses, priorities, validCount, out index);
+        if (isFind == false)
+        {
+            Console.WriteLine("No approved is find.");
+            return;
+        }
+        Console.WriteLine($"Unit:{unitNames[index]}\n" +
+            $"Type:{reportTypes[index]}\n" +
+            $"Priority:{priorities[index]}\n" +
+            $"Score:{scores[index]}");
+    }
+
     static void Main()
     {
         string path = @".\reports.txt";
@@ -261,7 +300,7 @@ class Manager
         DisplayBasicStatistics(scores, validCount);
         DisplayStatusCounts(statuses, validCount);
         DisplayTypeCounts(reportTypes, validCount);
-            
+        DisplayHighestPriorityApproved(unitNames, reportTypes, priorities, scores, statuses, validCount);
     }
       
 }
