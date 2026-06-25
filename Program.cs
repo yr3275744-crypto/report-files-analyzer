@@ -1,5 +1,4 @@
-﻿// TODO: add prints
-using System;
+﻿using System;
 using System.IO;
 namespace ReportFilesAnalyzer;
 
@@ -116,10 +115,14 @@ class Manager
         return sum / validCount;
     }
 
-    static double FindMaxScore(double[] scores)
+    static double FindMaxScore(double[] scores, int validCount)
     {
-        double max = 0.0;
-        for (int i = 0; i < scores.Length; i++)
+        if (validCount == 0)
+        {
+            return 0.0;
+        }
+        double max = scores[0];
+        for (int i = 0; i < validCount; i++)
         {
             if (scores[i] > max)
             {
@@ -185,7 +188,7 @@ class Manager
     static void DisplayBasicStatistics(double[] scores, int validCount)
     {
         double avarage = CalculateAverage(scores, validCount);
-        double maxScore = FindMaxScore(scores);
+        double maxScore = FindMaxScore(scores, validCount);
         double minScore = FindMinScore(scores, validCount);
         
         Console.WriteLine($"=== Report Statistics ===\n" +
@@ -286,7 +289,7 @@ class Manager
         {
             double average;
             bool isFind = GetAverageByPriority(priorities, scores, validCount, i, out average);
-            if (isFind = true)
+            if (isFind == true)
             {
                 Console.WriteLine($"Priority {i}:{average:F2}");
             }
