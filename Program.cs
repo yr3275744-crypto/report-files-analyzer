@@ -19,16 +19,15 @@ enum Status
 
 class Manager
 {
-    static string[]? LoadFile(string? aPath)
+    static string[]? LoadFile(string path)
     {
-        if (File.Exists(aPath))
+        if (File.Exists(path))
         {
-            string[] reports = File.ReadAllLines(aPath);
+            string[]? reports = File.ReadAllLines(path);
             if (reports.Length > 0)
             {
-                string[]? nullableReports = reports;
                 Console.WriteLine($"File loaded: {reports.Length} lines found");
-                return nullableReports;
+                return reports;
             }
             else
             {
