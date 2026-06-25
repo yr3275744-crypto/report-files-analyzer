@@ -1,4 +1,5 @@
-﻿using System;
+﻿// TODO: add prints
+using System;
 using System.IO;
 namespace ReportFilesAnalyzer;
 
@@ -72,7 +73,7 @@ class Manager
             {
                 continue;
             }
-            if (report[0].Trim() is null)
+            if (string.IsNullOrEmpty(report[0].Trim()))
             {
                 continue;
             }
@@ -131,7 +132,7 @@ class Manager
         {
             sum = sum + scores[i];
         }
-        return sum / scores.Length;
+        return sum / validCount;
     }
 
     static double FindMaxScore(double[] scores)
@@ -166,6 +167,79 @@ class Manager
         }
     }
 
+    static int CountByStatus(Status[] statuses, Status desiredStatus, int validCount)
+    {
+        if (validCount == 0)
+        {
+            return 0;
+        }
+        int count = 0;
+        for(int i = 0; i < validCount; i ++)
+        {
+            if (statuses[i] == desiredStatus)
+            {
+                count = count + 1;
+            }
+        }
+        return count;
+    }
+
+    static int CountByType(ReportType[] reportTypes, ReportType desiredType, int validCount)
+    {
+        if (validCount == 0)
+        {
+            return 0;
+        }
+        int count = 0;
+        for (int i = 0; i < validCount; i++)
+        {
+            if (reportTypes[i] == desiredType)
+            {
+                count = count + 1;
+            }
+        }
+        return count;
+    }
+
+    static void DisplayBasicStatistics(double[] scores, int validCount)
+    {
+        double avarage = CalculateAverage(scores, validCount);
+        double maxScore = FindMaxScore(scores);
+        double minScore = FindMinScore(scores, validCount);
+        
+        Console.WriteLine($"=== Report Statistics ===\n" +
+            $"Total Reports:{validCount}\n" +
+            $"Average Score:{avarage:F2}\n" +
+            $"Highest Score:{maxScore}\n" +
+            $"Lowest Score:{minScore}");
+    }
+
+    static void DisplayStatusCounts(Status[] statuses, int validCount)
+    {
+        int pendingNumber = CountByStatus(statuses, Status.Pending, validCount);
+        int approvedNumber = CountByStatus(statuses, Status.Approved, validCount);
+        int rejectedNumber = CountByStatus(statuses, Status.Rejected, validCount);
+
+        Console.WriteLine($"=== Reports by Status ===\n" +
+            $"Pending:{pendingNumber}\n" +
+            $"Approved:{approvedNumber}\n" +
+            $"Rejected:{rejectedNumber}");
+    }
+
+    static void DisplayTypeCounts(ReportType[] reportTypes, int validCount)
+    {
+        int collectNumber = CountByType(reportTypes, ReportType.Collect, validCount);
+        int analyzeNumber = CountByType(reportTypes, ReportType.Analyze, validCount);
+        int reconNumber = CountByType(reportTypes, ReportType.Recon, validCount);
+        int intelNumber = CountByType(reportTypes, ReportType.Intel, validCount);
+
+        Console.WriteLine($"=== Reports by Type ===\n" +
+            $"Collect:{collectNumber}\n" +
+            $"Analyze:{analyzeNumber}\n" +
+            $"Recon:{reconNumber}\n" +
+            $"Intel:{intelNumber}");
+    }
+
     static void Main()
     {
         string path = @".\reports.txt";
@@ -183,15 +257,11 @@ class Manager
         Status[] statuses = new Status[reportsNumber];
 
         int validCount = ProcessReports(unitNames, reportTypes, priorities, scores, statuses, reports);
-        
-        double avarage = CalculateAverage(scores, validCount);
-        Console.WriteLine($"{avarage}");
-        
-        double maxScore = FindMaxScore(scores);
-        Console.WriteLine($"{maxScore}");
 
-        double minScore = FindMinScore(scores, validCount);
-        Console.WriteLine($"{minScore}");
+        DisplayBasicStatistics(scores, validCount);
+        DisplayStatusCounts(statuses, validCount);
+        DisplayTypeCounts(reportTypes, validCount);
+            
     }
       
 }
