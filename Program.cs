@@ -223,7 +223,7 @@ class Manager
             $"Intel:{intelNumber}");
     }
 
-    static bool FindHighesPriorityApprovedIndex(Status[] statuses, int[] priorities, int validCount, out int index)
+    static bool FindHighestPriorityApprovedIndex(Status[] statuses, int[] priorities, int validCount, out int index)
     {
         int? maxPriority = null;
         bool isFind = false;
@@ -250,7 +250,7 @@ class Manager
     {
         Console.WriteLine("=== Highest Priority Approved Report ===");
         int index;
-        bool isFind = FindHighesPriorityApprovedIndex(statuses, priorities, validCount, out index);
+        bool isFind = FindHighestPriorityApprovedIndex(statuses, priorities, validCount, out index);
         if (isFind == false)
         {
             Console.WriteLine("No approved is find.");
